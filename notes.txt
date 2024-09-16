@@ -1,0 +1,91 @@
+CREATING jOIN TABLES.
+Objectives 
+    1. use primary and foreign keys to create relations 
+    USE inner JOIN and LEFT join TO RETRIEVE DATA that is relevant data for members of one tbale in other tables.
+    use join to create one-to-many and may-to-many relationshipts bwtween tables.
+
+there are two types of relationships that we need to concern ourselves with right now.
+
+ONE-TO-MANY RELATIONSHIPS.
+the one to may relatiosnhipis created or encated using foreign keys.
+the cats table has the foreign key column it contains information that corresponds to the id column of the onwes table.
+one owner has many cats.
+the table that contains foreign keys if the that contains the entities that belong to another entity.
+the table that is reference thorugh the foreign key is the owner entity that has many of something else.
+how then can w account for a cat with many owners ?
+we could continue adding owner _id column to the cats table.this si however not practical.
+we can avoid creation of infinite number of horizontal columns int he cats table by creating the join table.
+
+JOIN TABLES and the MANY-TO-MANY relationship.
+a jointable contains common fields from two or more otehr tables.
+in this wam, it creates a many-to-many realtionship between data.
+
+BUILDING A JOIN TABLE.
+we want to create a many-to-many association between cats and owners, such that a cat can hve many owners and an owner can have many cats.
+
+our join table will therfore have two columns one for each of the tables we want to relate
+we will ahve a cat_id column and an owner_id column.
+
+SETTING UP THE DATABASE.
+step 1 
+create the pets_database.db by running the following command
+    sqlite3 pets_database.db
+step2
+create a table cats with id, name,age, breed
+owners table with id and name
+
+step 3 
+insert the following dataas stated in the documntation.
+
+step 4 
+creating a cats_owners join table.
+create a table for cats_owners join table with id , cat_id and owner_id
+
+step 5 
+inseting data in the joint table.
+note that each row in out join table will represent one cat/owner relationship.
+say that a cat has now acquired two owners then we insert the realtionship owners realtionship first 
+this is done as follows:
+    INSERT INTO cat_owners (cat_id, owner_id) VALUES (3,2);
+
+Our many to many reltionship uses foriegn and primary keys to connect between two different tables.
+this is described as a cat ahs many owners through the cat_owners table.
+
+lets insert a row that will give a perticular owner may cats
+In our join table, we have a cat that has many owners and an owner that has many cats.
+this is many-to-many relationship.
+
+the next step is querying the Join table.
+
+
+QUERYING THE JOIN TABLE.
+Basic Queries.
+in our working example lets select all of the owners who are associated to cat number 3.
+    SELECT cats_owners.owner_id FROM cats_owners WHERE cat_id = 3;
+     SELECT cats_owners.cat_id FROM cats_owners WHERE owner_id = 2;
+these queries are great but it would be great if we could obtain a little more information like the names of the cats or the owners.
+this can be achieved if we use the following statement.
+
+    SELECT owners.name FROM owners INNER JOIN cats_owners ON owners.id = cats_owners.owners_id WHERE cats_owners.cat_id = 3;
+    SELECT owners.name
+FROM owners
+INNER JOIN cat_owners
+ON owners.id = cat_owners.owner_id WHERE cat_owners.cat_id = 3;
+
+Breaking down this statement 
+    1. SELECT statemnt decalred the column we want to actually have returned to us.
+    the FROM Statement - here we specify the table whose column we are querying 
+    INNER JOIN cats_owners ON owners.id = cats_owners.owner_id -> here we are joining the cats_owners table on 
+    the owners table. we are telling our query to look for  other owners whore id column matched up the owner_id column in the cat_owner table.
+    WHERE cat_owners.cat_id = 3 -> here we are adding an additonal condition to our query.
+     we are telling our query to look at the cat+owners table rows where teh value of the cat_ id column is 3.
+     then for thos rows whose only cross refernce the owner_id column value witht he id column inthe owners table.
+
+     SELECT
+  cats.name AS cat_name,
+  owners.name AS owner_name
+FROM cats
+INNER JOIN cats_owners
+  ON cats.id = cats_owners.cat_id
+INNER JOIN owners
+  ON cats_owners.owner_id = owners.id;
